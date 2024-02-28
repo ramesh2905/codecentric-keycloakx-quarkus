@@ -1,0 +1,64 @@
+image:
+  repository: quay.io/keycloak/keycloak
+  tag: "23.0.7"
+
+replicas: 2
+
+dbchecker:
+  enabled: true
+
+database:
+  vendor: postgres
+  hostname: localhost
+  port: 5432
+  database: postgres
+  username: keycloak
+  password: changeme
+
+service:
+  httpPort: 8080
+
+command:
+  - "/opt/keycloak/bin/kc.sh"
+  - "start"
+  - "--http-enabled=true"
+  - "--http-port=8080"
+  - "--cache-stack=kubernetes"
+  - "--hostname-strict=false"
+  - "--hostname-strict-https=false"
+  
+extraEnv: |
+  - name: KEYCLOAK_ADMIN
+    value: admin
+  - name: KEYCLOAK_ADMIN_PASSWORD
+    value: changeme
+  - name: KEYCLOAK_USER
+    value: "admin"
+  - name: KEYCLOAK_PASSWORD
+    value: "changeme"
+  - name: CACHE_OWNERS_COUNT
+    value: "2"
+  - name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
+    value: "2"
+  - name: PROXY_ADDRESS_FORWARDING
+    value: "true"
+  - name: KC_HEALTH_ENABLED
+    value: "true"
+  - name: KC_METRICS_ENABLED
+    value: "true"
+  - name: KC_LOG_LEVEL
+    value: "INFO"
+  - name: KC_HTTP_RELATIVE_PATH
+    value: "/auth"
+  - name: KC_PROXY
+    value: "edge"
+  - name: QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY
+    value: "true"
+  - name: JAVA_OPTS_APPEND
+    value: >-
+      -Xms128m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Djgroups.bind_addr=GLOBAL -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless.keycloak.svc.cluster.local
+   
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 2
