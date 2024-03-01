@@ -1,11 +1,11 @@
 image:
-  repository: quay.io/keycloak/keycloak
+  repository: keycloak-codecentric
   tag: "23.0.7"
 
 replicas: 2
 
 dbchecker:
-  enabled: true
+  enabled: false
 
 database:
   vendor: postgres
@@ -56,7 +56,7 @@ extraEnv: |
     value: "true"
   - name: JAVA_OPTS_APPEND
     value: >-
-      -Xms128m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Djgroups.bind_addr=GLOBAL -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless.keycloak.svc.cluster.local
+      -Xms128m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless.keycloak.svc.cluster.local
    
 autoscaling:
   enabled: true
