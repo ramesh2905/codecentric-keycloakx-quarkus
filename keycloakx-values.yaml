@@ -11,8 +11,8 @@ database:
   vendor: postgres
   hostname: localhost
   port: 5432
-  database: postgres
-  username: keycloak
+  database: postgresql
+  username: admin
   password: changeme
 
 service:
@@ -31,9 +31,9 @@ extraEnv: |
   - name: KEYCLOAK_ADMIN
     value: admin
   - name: KEYCLOAK_ADMIN_PASSWORD
-    value: changeme
+    value: "changeme"
   - name: KEYCLOAK_USER
-    value: "admin"
+    value: admin
   - name: KEYCLOAK_PASSWORD
     value: "changeme"
   - name: CACHE_OWNERS_COUNT
